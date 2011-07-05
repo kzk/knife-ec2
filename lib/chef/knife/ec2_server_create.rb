@@ -186,10 +186,20 @@ class Chef
 
         $stdout.sync = true
 
+        aws_access_key_id = Chef::Config[:knife][:aws_access_key_id]
+        if aws_access_key_id.nil?
+          raise "aws_access_key_id is nil. please set knife[:aws_access_key_id] in your knife.rb."
+        end
+
+        aws_secret_access_key = Chef::Config[:knife][:aws_secret_access_key]
+        if aws_secret_access_key.nil?
+          raise "aws_secret_access_key is nil. please set knife[:aws_secret_access_key] in your knife.rb."
+        end
+
         connection = Fog::Compute.new(
           :provider => 'AWS',
-          :aws_access_key_id => Chef::Config[:knife][:aws_access_key_id],
-          :aws_secret_access_key => Chef::Config[:knife][:aws_secret_access_key],
+          :aws_access_key_id => aws_access_key_id,
+          :aws_secret_access_key => aws_secret_access_key,
           :region => locate_config_value(:region)
         )
 
